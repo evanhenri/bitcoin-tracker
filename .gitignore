@@ -1,0 +1,7 @@
+**/__pycache__
+*.py[co]
+.cache
+.coverage
+*,cover
+.idea/
+.tox/
