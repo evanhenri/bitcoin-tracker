@@ -1,6 +1,11 @@
 {% extends 'bootstrap4/bootstrap4.html' %}
 
 {% load bootstrap4 %}
+{% load static %}
+
+{% block bootstrap4_extra_head %}
+    <link rel="shortcut icon" type="image/png" href="{% static 'bitcoin_tracker/favicons/favicon.ico' %}"/>
+{% endblock %}
 
 {% block bootstrap4_content %}
     <nav class="navbar navbar-expand navbar-dark bg-dark">
