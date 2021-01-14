@@ -5,7 +5,7 @@ services:
     build: ./app
     environment:
       POSTGRES_PASSWORD: "d46b57d9c82c66eada32e31652b6a1"
-#      PROD: "1"
+      PROD: "1"
       SECRET_KEY: "h1$pmr(ie5-se85!v4r7(94k&x34t3(n=osngv^27u-xllf^ak"
     volumes:
       - ./app:/app
