@@ -1,0 +1,37 @@
+{% extends 'bitcoin_tracker/base.html' %}
+
+{% load bootstrap4 %}
+{% load custom_filters %}
+
+{% block content %}
+    {% if transactions %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Block</th>
+                    <th scope="col">Confirmations</th>
+                    <th scope="col">Hash</th>
+                    <th scope="col">Input Value</th>
+                    <th scope="col">Fee</th>
+                    <th scope="col">Inputs</th>
+                    <th scope="col">Outputs</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in transactions %}
+                    <tr>
+                        <td>{{ transaction|get_item:'block_height' }}</td>
+                        <td>{{ transaction|get_item:'confirmations' }}</td>
+                        <td title="{{ transaction|get_item:'hash' }}">{{ transaction|get_item:'hash'|truncatechars:10 }}</td>
+                        <td>{{ transaction|get_item:'inputs_value'|satoshis_to_btc }} BTC</td>
+                        <td>{{ transaction|get_item:'fee'|satoshis_to_btc }} BTC</td>
+                        <td>{{ transaction|get_item:'inputs_count' }}</td>
+                        <td>{{ transaction|get_item:'outputs_count' }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        No transactions exist for address
+    {% endif %}
+{% endblock %}

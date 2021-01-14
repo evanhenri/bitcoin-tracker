@@ -1,0 +1,37 @@
+version: "3.7"
+services:
+  app:
+    image: ehenri/bitcoin-tracker/app:latest
+    build: ./app
+    environment:
+      POSTGRES_PASSWORD: "d46b57d9c82c66eada32e31652b6a1"
+#      PROD: "1"
+      SECRET_KEY: "h1$pmr(ie5-se85!v4r7(94k&x34t3(n=osngv^27u-xllf^ak"
+    volumes:
+      - ./app:/app
+      - static_files:/static
+
+  db:
+    image: postgres:13.1
+    environment:
+      POSTGRES_PASSWORD: "d46b57d9c82c66eada32e31652b6a1"
+    volumes:
+      - /data/bitcoin-tracker/db:/var/lib/postgresql/data
+
+  nginx:
+    image: ehenri/bitcoin-tracker/nginx:latest
+    build: ./nginx
+    ports:
+      - "127.0.0.1:80:80"
+    volumes:
+      - static_files:/static
+
+  redis:
+    image: redis:6.0.10
+    hostname: redis
+    volumes:
+      - /data/bitcoin-tracker/redis:/data
+
+
+volumes:
+  static_files:

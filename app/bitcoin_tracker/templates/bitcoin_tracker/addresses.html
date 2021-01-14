@@ -1,0 +1,83 @@
+{% extends 'bitcoin_tracker/base.html' %}
+
+{% load bootstrap4 %}
+{% load custom_filters %}
+
+{% block content %}
+    {% if addresses %}
+        <table class="table" id="address-table">
+            <thead>
+                <tr>
+                    <th scope="col">{{ form.data.label }}</th>
+                    <th scope="col">{{ form.label.label }}</th>
+                    <th scope="col">Balance</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for address in addresses %}
+                    <tr>
+                        <td class="col-md-3">
+                            <a href="{% url 'transactions' address.data %}">
+                                {{ address.data }}
+                            </a>
+                        </td>
+                        <td class="col-md-3">
+                            {{ address.label }}
+                        </td>
+                        <td class="col-md-3">
+                            {{ balances|get_item:address.data|satoshis_to_btc }} BTC
+                        </td>
+                        <td class="col-md-1">
+                            <button type="submit" class="btn btn-danger btn-xs" onclick='deleteRow(this)' value="{% url 'address-detail' address.id %}">
+                              x
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No addresses have been added yet.</p>
+    {% endif %}
+
+    <form action="{% url 'addresses' %}" id="address-form" method="post" role="form">
+        {% csrf_token %}
+
+        {% bootstrap_form_errors form type='all' %}
+
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td class="col-md-6">
+                        {% bootstrap_field form.data show_help=True show_label=False %}
+                    </td>
+                    <td class="col-md-6">
+                        {% bootstrap_field form.label show_help=True show_label=False %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="text-align: center">
+            {% bootstrap_button 'Submit' button_class='btn-primary' button_type='submit' %}
+        </div>
+    </form>
+{% endblock %}
+
+{% block bootstrap4_extra_script %}
+    <script>
+        function deleteRow(clickedBtn) {
+            $.ajax({
+                url: clickedBtn.value,
+                type: 'DELETE',
+                complete: function () {
+                    clickedBtn.closest('table').deleteRow(
+                        clickedBtn.closest('tr').rowIndex
+                    );
+                }
+            });
+        }
+    </script>
+{% endblock %}
